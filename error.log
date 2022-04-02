@@ -1,0 +1,17 @@
+
+2022-04-02 22:00:02,044 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-02 22:00:02,044 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-02 22:00:02,047 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-02 22:00:02] "GET /index.html HTTP/1.1" 200 803 0.002434
+2022-04-02 22:00:02,115 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-02 22:00:02,115 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-02 22:00:02,117 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-02 22:00:02] "GET /eel.js HTTP/1.1" 200 6028 0.001405
+2022-04-02 22:00:02,240 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-02 22:00:02,241 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-02 22:00:02,263 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-02 22:00:02] "GET /favicon.ico HTTP/1.1" 404 877 0.023139
+2022-04-02 22:00:02,508 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-02 22:00:02,508 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-02 22:00:02,508 DEBUG geventwebsocket.handler Attempting to upgrade connection
+2022-04-02 22:00:02,510 DEBUG geventwebsocket.handler WebSocket request accepted, switching protocols
+2022-04-02 22:00:08,600 DEBUG geventwebsocket.handler Closed WebSocket
+2022-04-02 22:00:08,600 DEBUG geventwebsocket.handler Failed to write closing frame -> closing socket
+2022-04-02 22:00:08,601 DEBUG geventwebsocket.handler Closed WebSocket
