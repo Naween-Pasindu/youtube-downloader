@@ -1,11 +1,15 @@
-import eel,json,logging,os
+import eel,json,logging,os,time
 
+from bs4 import BeautifulSoup
 from gevent import config
-from pytube import YouTube
+from pytube import YouTube,Playlist
 from tkinter import messagebox
+from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+
+url=""
 
 eel.init("web")  
-
 logging.basicConfig(filename='error.log', level=logging.DEBUG,format='%(asctime)s %(levelname)s %(name)s %(message)s')
 logger=logging.getLogger(__name__)
 
@@ -23,8 +27,42 @@ def get_download_path():
         return os.path.join(os.path.expanduser('~'), 'downloads')
 
 @eel.expose    
-def say_hello_py(x):
-    print('Hello from %s' % x)
+def search(link):
+    global url
+    url=link
+    print(url)
+    displayVideoLinks()
+
+@eel.expose    
+def displayVideoLinks():
+    if("list" in url):
+        p = Playlist(url)
+        print('Number Of Videos In playlist: %s' % len(p.video_urls))
+    else:
+        p = YouTube(url)
+    print(2) 
+    print(p)
+    return
+    for video in p.videos:
+        print(video)
+
+def getMyMixUrls():
+    data=[]
+    result = messagebox.askquestion("Allow to open Chrome Window", "New Chrome Window will open on test mode?", icon='warning')
+    if result == 'yes':
+        #https://stackoverflow.com/questions/63192583/get-youtube-playlist-urls-with-python
+        driver = webdriver.Chrome(ChromeDriverManager().install())
+        driver.set_window_size(1024, 600)
+        driver.maximize_window()
+        driver.get(url)
+        time.sleep(2)
+        soup=BeautifulSoup(driver.page_source,'html.parser')
+        res=soup.find_all('a',{'class':'yt-simple-endpoint style-scope ytd-playlist-panel-video-renderer'})
+        for i in res:
+            data.append(i.get("href"))
+        return data
+    else:
+        return 0
 
 #say_hello_py('Python World!')
 #eel.say_hello_js('Python World!')
@@ -48,6 +86,5 @@ except Exception  as err:
     messagebox.showwarning("Error", "database error")
     quit()  
 
-
-eel.start("index.html",size=(380,620),port=0)
+eel.start("index.html",port=0)
 config.close()

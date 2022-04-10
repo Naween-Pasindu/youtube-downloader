@@ -1,22 +1,42 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Hello, World!</title>
+<!doctype html>
+<html lang="en">
 
-    <!-- Include eel.js - note this file doesn't exist in the 'web' directory -->
-    <script type="text/javascript" src="/eel.js"></script>
-    <script type="text/javascript">
-      eel.expose(say_hello_js); // Expose this function to Python
-      function say_hello_js(x) {
-        console.log("Hello from " + x);
-      }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+</head>
 
-      say_hello_js("Javascript World!");
-      eel.say_hello_py("Javascript World!"); // Call a Python function
-    </script>
-  </head>
+<body>
+  <div class="container">
+    <legend style="text-align:center;">YouTube Downloader</legend>
+    <div class="form-group">
+      <label for="videoUrl">Enter video URL</label>
+      <input type="text" class="form-control" id="videoUrl" placeholder="Eg.https://www.youtube.com/watch?v=">
+    </div>
+    <button id="search" class="btn btn-primary" style="width:100%;">Download</button>
+    <hr />
+    <div style="text-align:center;" id="list">
+    </div>
+  </div>
+</body>
+<style>
+</style>
+<script type="text/javascript" src="/eel.js"></script>
+<script type="text/javascript">
+  $(function () {
+    $("#search").click(function () {
+      eel.search($("#videoUrl").val());
+      $('#inp').val('');
+    });
+  }); 
+  async function getLinks() {
+    let n = await eel.displayVideoLinks();
+    console.log(n)
+    $("#list").append(n);
+  }
+</script>
 
-  <body>
-    Hello, World!
-  </body>
 </html>
