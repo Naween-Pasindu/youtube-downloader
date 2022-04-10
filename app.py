@@ -9,7 +9,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 url=""
 
-eel.init("web")  
+eel.init("web") 
 logging.basicConfig(filename='error.log', level=logging.DEBUG,format='%(asctime)s %(levelname)s %(name)s %(message)s')
 logger=logging.getLogger(__name__)
 
@@ -37,14 +37,16 @@ def search(link):
 def displayVideoLinks():
     if("list" in url):
         p = Playlist(url)
-        print('Number Of Videos In playlist: %s' % len(p.video_urls))
+        if(len(p)==0):
+            link=getMyMixUrls()
+            print(link)
+            return
+        else:
+            for video in p.videos:
+                print(video)
     else:
         p = YouTube(url)
-    print(2) 
     print(p)
-    return
-    for video in p.videos:
-        print(video)
 
 def getMyMixUrls():
     data=[]
@@ -59,7 +61,7 @@ def getMyMixUrls():
         soup=BeautifulSoup(driver.page_source,'html.parser')
         res=soup.find_all('a',{'class':'yt-simple-endpoint style-scope ytd-playlist-panel-video-renderer'})
         for i in res:
-            data.append(i.get("href"))
+            data.append(i.get("href").split("/watch?v=")[1].split("&list=")[0])
         return data
     else:
         return 0
