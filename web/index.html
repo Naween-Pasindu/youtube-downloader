@@ -4,16 +4,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 </head>
 
-<body>
+<body
+  style="background: rgb(2,0,36);background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,9,0.7738445720084909) 51%, rgba(0,212,255,1) 100%);overflow-y: hidden;">
   <div class="container">
-    <legend style="text-align:center;">YouTube Downloader</legend>
-    <div class="form-group">
+    <div id="alert" style="z-index: 30;position: absolute;top: 5%;right:5%;"></div>
+  </div>
+  <div class="container mt-5 rounded" style="width: 60%;">
+    <legend style="text-align:center;margin-top: 3%;">
+      <h2><b>YouTube Downloader</b></h2>
+    </legend>
+  </div>
+
+  <div class="container mt-1 rounded" style="background-color:gainsboro;width: 60%;">
+    <div class="form-group p-1">
       <label for="videoUrl">Enter video URL</label>
       <input type="text" class="form-control" id="videoUrl" placeholder="Eg.https://www.youtube.com/watch?v=">
     </div>
@@ -22,21 +36,74 @@
     <div style="text-align:center;" id="list">
     </div>
   </div>
+
+  <div class="container mt-2 p-3 rounded" id="display" style="background-color:gainsboro;max-height:450px;overflow-y: auto;">
+  </div>
+
+  <div class="modal fade" id="confirmTestWindow" tabindex="-1" role="dialog" aria-labelledby="confirmTestWindowLabel"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmTestWindowLabel">Permission Required</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Unable to locate the playlist with normal mode,we are hoping to proceed with deep search.It will open a new
+          Chrome window.
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="cancel" data-value="cancel" class="btn btn-secondary"
+            data-dismiss="modal">Cancel</button>
+          <button type="button" id="proceedDeep" data-value="proceed" class="btn btn-primary">Proceed With Deep
+            Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
-<style>
-</style>
 <script type="text/javascript" src="/eel.js"></script>
 <script type="text/javascript">
+  var check;
   $(function () {
     $("#search").click(function () {
-      eel.search($("#videoUrl").val());
-      $('#inp').val('');
+      sendData();
+      if (check == 'myMix') {
+        loadData();
+      } else if (check == 'playList') {
+        loadData();
+      } else if (check == 'video') {
+        loadDataDefault();
+      }
     });
-  }); 
-  async function getLinks() {
-    let n = await eel.displayVideoLinks();
-    console.log(n)
-    $("#list").append(n);
+    $("#proceedDeep").click(function (e) {
+      //var data = $(this).attr('data-value');
+      $('#confirmTestWindow').modal('toggle');
+      $('#confirmTestWindow').modal('hide');
+      $('#alert').html("<div class='alert alert-warning alert-dismissible fade show' role='alert'><strong>Attention!</strong> Do not close the Chrome window until it close automatically.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+      loadData();
+    });
+  });
+
+  eel.expose(onModel);
+  function onModel() {
+    $('#confirmTestWindow').modal('toggle');
+    $('#confirmTestWindow').modal('show');
+  }
+  async function sendData() {
+    let val=$("#videoUrl").val();
+    if(val!=""){
+      check = await eel.search(val)();
+    }
+  }
+  async function loadDataDefault() {
+    let n = await eel.displayVideoDefault();
+  }
+  async function loadData() {
+    let n = await eel.displayVideoLinks($("#videoUrl").val(),check)();
+    $('#display').html(n);
   }
 </script>
 

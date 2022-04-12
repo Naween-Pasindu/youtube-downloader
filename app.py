@@ -1,3 +1,6 @@
+from cgi import test
+from dataclasses import dataclass
+from re import I
 import eel,json,logging,os,time
 
 from bs4 import BeautifulSoup
@@ -5,9 +8,8 @@ from gevent import config
 from pytube import YouTube,Playlist
 from tkinter import messagebox
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-
-url=""
 
 eel.init("web") 
 logging.basicConfig(filename='error.log', level=logging.DEBUG,format='%(asctime)s %(levelname)s %(name)s %(message)s')
@@ -27,44 +29,54 @@ def get_download_path():
         return os.path.join(os.path.expanduser('~'), 'downloads')
 
 @eel.expose    
-def search(link):
-    global url
-    url=link
-    print(url)
-    displayVideoLinks()
-
-@eel.expose    
-def displayVideoLinks():
+def search(url):
     if("list" in url):
-        p = Playlist(url)
-        if(len(p)==0):
-            link=getMyMixUrls()
-            print(link)
-            return
+        data = Playlist(url)
+        if(len(data)==0):
+            check="myMix"
+            eel.onModel()
         else:
-            for video in p.videos:
+            check="playList"
+            for video in data.videos:
                 print(video)
     else:
-        p = YouTube(url)
-    print(p)
+        check="video"
+        #data = [YouTube(url),]
+        # for video in data:
+        #     streams = set()
+        #     for stream in video.streams.filter(type="video"):  # Only look for video streams to avoid None values
+        #         streams.add(stream.resolution)
+        #     print(streams)
+    return check
+    
+@eel.expose    
+def displayVideoLinks(url,check):
+    output=""
+    if(check=="myMix"):
+        data=getMyMixUrls(url)
+        for video in data:
+            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:40%;'><h5 class='card-title'>Card title</h5></td><td  style='width:30%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
+    elif(check=="playList"):
+        pass
+    print(output)
+    return output
+@eel.expose    
+def displayVideoDefault():
+    pass
 
-def getMyMixUrls():
+def getMyMixUrls(url):
     data=[]
-    result = messagebox.askquestion("Allow to open Chrome Window", "New Chrome Window will open on test mode?", icon='warning')
-    if result == 'yes':
-        #https://stackoverflow.com/questions/63192583/get-youtube-playlist-urls-with-python
-        driver = webdriver.Chrome(ChromeDriverManager().install())
-        driver.set_window_size(1024, 600)
-        driver.maximize_window()
-        driver.get(url)
-        time.sleep(2)
-        soup=BeautifulSoup(driver.page_source,'html.parser')
-        res=soup.find_all('a',{'class':'yt-simple-endpoint style-scope ytd-playlist-panel-video-renderer'})
-        for i in res:
-            data.append(i.get("href").split("/watch?v=")[1].split("&list=")[0])
-        return data
-    else:
-        return 0
+    #https://stackoverflow.com/questions/63192583/get-youtube-playlist-urls-with-python
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+    driver.set_window_size(1024, 600)
+    driver.maximize_window()
+    driver.get(url)
+    time.sleep(2)
+    soup=BeautifulSoup(driver.page_source,'html.parser')
+    res=soup.find_all('a',{'class':'yt-simple-endpoint style-scope ytd-playlist-panel-video-renderer'})
+    for i in res:
+        data.append(i.get("href").split("/watch?v=")[1].split("&list=")[0])
+    return data
 
 #say_hello_py('Python World!')
 #eel.say_hello_js('Python World!')
