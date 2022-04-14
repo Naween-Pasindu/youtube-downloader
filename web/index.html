@@ -31,7 +31,7 @@
       <label for="videoUrl">Enter video URL</label>
       <input type="text" class="form-control" id="videoUrl" placeholder="Eg.https://www.youtube.com/watch?v=">
     </div>
-    <button id="search" class="btn btn-primary" style="width:100%;">Download</button>
+    <button id="search" class="btn btn-primary" style="width:100%;">Search</button>
     <hr />
     <div style="text-align:center;" id="list">
     </div>
@@ -67,16 +67,18 @@
 <script type="text/javascript" src="/eel.js"></script>
 <script type="text/javascript">
   var check;
+  $('#display').hide();
   $(function () {
     $("#search").click(function () {
+      $('#display').html("");
       sendData();
-      if (check == 'myMix') {
-        loadData();
-      } else if (check == 'playList') {
-        loadData();
-      } else if (check == 'video') {
-        loadDataDefault();
-      }
+    });
+    $(document).on('click', '.btn-download', function(){
+      console.log("hello");
+      let val=new Array($("#videoUrl").val());
+      var quality=$("#display .card .card-body #qualityList").val();
+      console.log(quality);
+      eel.download(val,quality)();
     });
     $("#proceedDeep").click(function (e) {
       //var data = $(this).attr('data-value');
@@ -96,13 +98,23 @@
     let val=$("#videoUrl").val();
     if(val!=""){
       check = await eel.search(val)();
+      if (check == 'myMix') {
+        loadData();
+      } else if (check == 'playList') {
+        loadData();
+      } else if (check == 'video') {
+        loadDataDefault();
+      }
     }
   }
   async function loadDataDefault() {
-    let n = await eel.displayVideoDefault();
+    let n = await eel.displayVideoDefault($("#videoUrl").val(),check)();
+    $('#display').show();
+    $('#display').html(n);
   }
   async function loadData() {
     let n = await eel.displayVideoLinks($("#videoUrl").val(),check)();
+    $('#display').show();
     $('#display').html(n);
   }
 </script>

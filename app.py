@@ -6,6 +6,7 @@ import eel,json,logging,os,time
 from bs4 import BeautifulSoup
 from gevent import config
 from pytube import YouTube,Playlist
+from pytube.cli import on_progress
 from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -37,8 +38,6 @@ def search(url):
             eel.onModel()
         else:
             check="playList"
-            for video in data.videos:
-                print(video)
     else:
         check="video"
         #data = [YouTube(url),]
@@ -52,17 +51,55 @@ def search(url):
 @eel.expose    
 def displayVideoLinks(url,check):
     output=""
+    print(check)
+    print(url)
     if(check=="myMix"):
         data=getMyMixUrls(url)
         for video in data:
-            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:40%;'><h5 class='card-title'>Card title</h5></td><td  style='width:30%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
+            data = YouTube("https://www.youtube.com/watch?v="+video)
+            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+data.title+"</h5><p><h6>"+data.author+"</h6></p></td><td  style='width:20%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
     elif(check=="playList"):
-        pass
-    print(output)
+        data = Playlist(url)
+        for video in data.videos:
+            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video.video_id+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+video.title+"</h5><p><h6>"+video.author+"</h6></p></td><td  style='width:20%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
     return output
 @eel.expose    
-def displayVideoDefault():
-    pass
+def displayVideoDefault(url,check):
+    if(check=="video"):
+        data = YouTube(url)
+        video= url.strip().split("/")[-1].split("=")[-1]
+        output ="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+data.title+"</h5><p><h6>"+data.author+"</h6></p></td><td  style='width:20%;'><select id='qualityList' class='form-select form-select-lg mb-3'>"
+        qualityList=[]
+        for stream in data.streams.filter(type="video",progressive=True):
+            #qualityList.append(stream.mime_type + " " + stream.resolution)
+            text = stream.mime_type + " " + stream.resolution
+            size= str(round(stream.filesize/1024/1024,2))+"MB"
+            output += "<option value='"+text+"'>"+text+" "+size+"</option>"
+        for stream in data.streams.filter(only_audio=True):
+            #qualityList.append(stream.mime_type + " " + stream.abr)
+            text = stream.mime_type + " " + stream.abr
+            size= str(round(stream.filesize/1024/1024,2))+"MB"
+            output += "<option value='"+text+"'>"+text+" "+size+"</option>"
+        output+="</select><br><button type='button' id='download' class='btn btn-primary btn-download'>Download</button>"
+        output +="</td></tr></table></div></div>"
+        print(qualityList)
+        return output
+
+@eel.expose    
+def download(url,quality):
+    temp = quality.split(" ")
+    mime_type=temp[0]
+    resolution=temp[1]
+    path=get_download_path()
+    for i in url:
+        data = YouTube(i,on_progress_callback=on_progress)
+        if("audio" in mime_type):
+            stream = data.streams.filter(mime_type=mime_type,only_audio=True)
+            stream.order_by('abr').desc().first().download()
+        else:
+            stream = data.streams.filter(resolution=resolution,mime_type=mime_type,progressive=True)
+            stream.order_by('resolution').desc().first().download(path)
+
 
 def getMyMixUrls(url):
     data=[]
@@ -78,8 +115,6 @@ def getMyMixUrls(url):
         data.append(i.get("href").split("/watch?v=")[1].split("&list=")[0])
     return data
 
-#say_hello_py('Python World!')
-#eel.say_hello_js('Python World!')
 try:
     config = open('config.json','r')
 except FileNotFoundError:
