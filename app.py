@@ -49,10 +49,10 @@ def displayVideoLinks(url,check):
     print(url)
     if(check=="myMix"):
         dataMix=getMyMixUrls(url)
+        output+="<h3>There are "+str(len(dataMix))+" videos.</h3>"
         for video in dataMix:
             data = YouTube("https://www.youtube.com/watch?v="+video)
             qualityList=[]
-            output+="<h3>There are "+str(len(dataMix))+" videos.</h3>"
             a=0
             for stream in data.streams.filter(type="video",progressive=True):
                 text = stream.mime_type + " " + stream.resolution
