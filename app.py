@@ -40,12 +40,6 @@ def search(url):
             check="playList"
     else:
         check="video"
-        #data = [YouTube(url),]
-        # for video in data:
-        #     streams = set()
-        #     for stream in video.streams.filter(type="video"):  # Only look for video streams to avoid None values
-        #         streams.add(stream.resolution)
-        #     print(streams)
     return check
     
 @eel.expose    
@@ -57,11 +51,33 @@ def displayVideoLinks(url,check):
         data=getMyMixUrls(url)
         for video in data:
             data = YouTube("https://www.youtube.com/watch?v="+video)
-            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+data.title+"</h5><p><h6>"+data.author+"</h6></p></td><td  style='width:20%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
+            qualityList=[]
+            output="<h3>There are "+str(len(data))+" videos.</h3>"
+            a=0
+            for stream in data.streams.filter(type="video",progressive=True):
+                text = stream.mime_type + " " + stream.resolution
+                qualityList.append(text)
+            for stream in data.streams.filter(only_audio=True):
+                text = stream.mime_type + " " + stream.abr
+                qualityList.append(text)
+            str1 = '-'.join(str(e) for e in qualityList)
+            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+data.title+"</h5><p><h6>"+data.author+"</h6></p></td><td  style='width:20%;text-align:center;'><h6 class='card-subtitle mb-2 text-muted'><input class='form-check-input' style='height:40px;width:40px' type='checkbox' value='"+video+"' data-quality='"+str1+"' id='flexCheckDefault"+str(a)+"'></h6></td></tr></table></div></div>"
+            a+=1
     elif(check=="playList"):
         data = Playlist(url)
+        output="<h3>There are "+str(len(data))+" videos.</h3>"
         for video in data.videos:
-            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video.video_id+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+video.title+"</h5><p><h6>"+video.author+"</h6></p></td><td  style='width:20%;'><h6 class='card-subtitle mb-2 text-muted'>Card subtitle</h6></td></tr></table></div></div>"
+            a=0
+            qualityList=[]
+            for stream in video.streams.filter(type="video",progressive=True):
+                text = stream.mime_type + " " + stream.resolution
+                qualityList.append(text)
+            for stream in video.streams.filter(only_audio=True):
+                text = stream.mime_type + " " + stream.abr
+                qualityList.append(text)
+            str1 = '-'.join(str(e) for e in qualityList)
+            output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video.video_id+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+video.title+"</h5><p><h6>"+video.author+"</h6></p></td><td  style='width:20%;text-align:center;'><h6 class='card-subtitle mb-2 text-muted'><input class='form-check-input' style='height:40px;width:40px' type='checkbox' value='"+video.video_id+"' data-quality='"+str1+"' id='flexCheckDefault"+str(a)+"'></h6></td></tr></table></div></div>"
+            a+=1
     return output
 @eel.expose    
 def displayVideoDefault(url,check):
@@ -71,12 +87,10 @@ def displayVideoDefault(url,check):
         output ="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+data.title+"</h5><p><h6>"+data.author+"</h6></p></td><td  style='width:20%;'><select id='qualityList' class='form-select form-select-lg mb-3'>"
         qualityList=[]
         for stream in data.streams.filter(type="video",progressive=True):
-            #qualityList.append(stream.mime_type + " " + stream.resolution)
             text = stream.mime_type + " " + stream.resolution
             size= str(round(stream.filesize/1024/1024,2))+"MB"
             output += "<option value='"+text+"'>"+text+" "+size+"</option>"
         for stream in data.streams.filter(only_audio=True):
-            #qualityList.append(stream.mime_type + " " + stream.abr)
             text = stream.mime_type + " " + stream.abr
             size= str(round(stream.filesize/1024/1024,2))+"MB"
             output += "<option value='"+text+"'>"+text+" "+size+"</option>"
@@ -92,14 +106,14 @@ def download(url,quality):
     resolution=temp[1]
     path=get_download_path()
     for i in url:
-        data = YouTube(i,on_progress_callback=on_progress)
+        data = YouTube("https://www.youtube.com/watch?v="+i)
         if("audio" in mime_type):
             stream = data.streams.filter(mime_type=mime_type,only_audio=True)
             stream.order_by('abr').desc().first().download()
         else:
             stream = data.streams.filter(resolution=resolution,mime_type=mime_type,progressive=True)
             stream.order_by('resolution').desc().first().download(path)
-
+        eel.sendAlert(data.title)
 
 def getMyMixUrls(url):
     data=[]

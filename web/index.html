@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -36,10 +37,14 @@
     <div style="text-align:center;" id="list">
     </div>
   </div>
-
-  <div class="container mt-2 p-3 rounded" id="display" style="background-color:gainsboro;max-height:450px;overflow-y: auto;">
+  <div class="container mt-2 p-3 rounded" id="download-area" style="text-align: right;">
+    <select class="form-select" style="width:40%;" id="quality-select">
+    </select>
+    <button type='button' id='download-all' class='btn btn-success btn-download-all'>Download Videos</button>
   </div>
-
+  <div class="container mt-2 p-3 rounded" id="display"
+    style="background-color:gainsboro;max-height:450px;overflow-y: auto;">
+  </div>
   <div class="modal fade" id="confirmTestWindow" tabindex="-1" role="dialog" aria-labelledby="confirmTestWindowLabel"
     aria-hidden="false">
     <div class="modal-dialog" role="document">
@@ -68,20 +73,54 @@
 <script type="text/javascript">
   var check;
   $('#display').hide();
+  $('#download-area').hide();
   $(function () {
     $("#search").click(function () {
       $('#display').html("");
       sendData();
     });
-    $(document).on('click', '.btn-download', function(){
-      console.log("hello");
-      let val=new Array($("#videoUrl").val());
-      var quality=$("#display .card .card-body #qualityList").val();
+    $(document).on('click', '.btn-download', function () {
+      let val = new Array($("#videoUrl").val());
+      var quality = $("#display .card .card-body #qualityList").val();
       console.log(quality);
-      eel.download(val,quality)();
+      eel.download(val, quality)();
+    });
+    $(".btn-download-all").on('click', function () {
+      var quality = $("#quality-select").val();
+      var url = new Array();
+      $("input:checked").each(function () {
+        let val = $(this).val();
+        url.push(val);
+      });
+      $('#alert').html();
+      eel.download(url, quality)();
+    });
+    $(document).on('change', '.form-check-input', function () {
+      var list = new Array();
+      $("#quality-select option").remove();
+      $("input:checked").each(function () {
+        var quality = $(this).attr("data-quality");
+        let temp=new Array();
+        temp=quality.split('-').slice()
+        list.push(temp);
+        //console.log(quality);
+      });
+      //console.log(list)
+      var filteredArray = new Array(list[0]);
+      for (let i = 1; i < list.length; i++) {
+        filteredArray[0] = filteredArray[0].filter(value => list[i].includes(value));
+      }
+      console.log(filteredArray)
+      var select = document.getElementById("quality-select");
+      for (let i = 0; i < filteredArray[0].length; i++) {
+        opt = document.createElement("option");
+        opt.value = filteredArray[0][i];
+        opt.innerHTML  = filteredArray[0][i];
+        console.log(filteredArray[0][i])
+        select.appendChild(opt);
+      }
     });
     $("#proceedDeep").click(function (e) {
-      //var data = $(this).attr('data-value');
       $('#confirmTestWindow').modal('toggle');
       $('#confirmTestWindow').modal('hide');
       $('#alert').html("<div class='alert alert-warning alert-dismissible fade show' role='alert'><strong>Attention!</strong> Do not close the Chrome window until it close automatically.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
@@ -94,13 +133,16 @@
     $('#confirmTestWindow').modal('toggle');
     $('#confirmTestWindow').modal('show');
   }
+
+  eel.expose(sendAlert);
+  function sendAlert(text){
+    $('#alert').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>"+text+" downloaded successfully.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+  }
   async function sendData() {
-    let val=$("#videoUrl").val();
-    if(val!=""){
+    let val = $("#videoUrl").val();
+    if (val != "") {
       check = await eel.search(val)();
-      if (check == 'myMix') {
-        loadData();
-      } else if (check == 'playList') {
+      if (check == 'playList') {
         loadData();
       } else if (check == 'video') {
         loadDataDefault();
@@ -108,13 +150,22 @@
     }
   }
   async function loadDataDefault() {
-    let n = await eel.displayVideoDefault($("#videoUrl").val(),check)();
+    $("#display").css("background-color", "rgba(0,0,0,0.0");
+    $('#display').show();
+    $('#display').html("<div class='spinner-box' style='text-align:center;width:100%;'><div class='pulse-container'><div class='pulse-bubble pulse-bubble-1'></div><div class='pulse-bubble pulse-bubble-2'></div><div class='pulse-bubble pulse-bubble-3'></div></div></div>");
+    let n = await eel.displayVideoDefault($("#videoUrl").val(), check)();
+    $("#display").css("background-color", "gainsboro");
     $('#display').show();
     $('#display').html(n);
   }
   async function loadData() {
-    let n = await eel.displayVideoLinks($("#videoUrl").val(),check)();
+    $("#display").css("background-color", "rgba(0,0,0,0.0");
     $('#display').show();
+    $('#display').html("<div class='spinner-box' style='text-align:center;width:100%;'><div class='pulse-container'><div class='pulse-bubble pulse-bubble-1'></div><div class='pulse-bubble pulse-bubble-2'></div><div class='pulse-bubble pulse-bubble-3'></div></div></div>");
+    let n = await eel.displayVideoLinks($("#videoUrl").val(), check)();
+    $("#display").css("background-color", "gainsboro");
+    $('#display').show();
+    $('#download-area').show();
     $('#display').html(n);
   }
 </script>
