@@ -80,12 +80,16 @@
       sendData();
     });
     $(document).on('click', '.btn-download', function () {
+      $('#alert').html();
+      $('#alert').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>Starting download....<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
       let val = new Array($("#videoUrl").val());
       var quality = $("#display .card .card-body #qualityList").val();
       console.log(quality);
       eel.download(val, quality)();
     });
     $(".btn-download-all").on('click', function () {
+      $('#alert').html();
+      $('#alert').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>Starting download....<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
       var quality = $("#quality-select").val();
       var url = new Array();
       $("input:checked").each(function () {
@@ -137,6 +141,10 @@
   eel.expose(sendAlert);
   function sendAlert(text){
     $('#alert').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>"+text+" downloaded successfully.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
+  }
+  eel.expose(completed);
+  function completed(){
+    $('#alert').append("<div class='alert alert-success alert-dismissible fade show' role='alert'>Downloading finished successfully.<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button></div>");
   }
   async function sendData() {
     let val = $("#videoUrl").val();

@@ -45,8 +45,6 @@ def search(url):
 @eel.expose    
 def displayVideoLinks(url,check):
     output=""
-    print(check)
-    print(url)
     if(check=="myMix"):
         dataMix=getMyMixUrls(url)
         output+="<h3>There are "+str(len(dataMix))+" videos.</h3>"
@@ -78,7 +76,6 @@ def displayVideoLinks(url,check):
             str1 = '-'.join(str(e) for e in qualityList)
             output+="<div class='card mb-2'><div class='card-body'><table style='width: 100%;'><tr><td style='width:30%;'><iframe class='embed-responsive-item'  src='https://www.youtube.com/embed/"+video.video_id+"' title='YouTube video player' frameborder='0' allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture' allowfullscreen></iframe></td><td  style='width:50%;'><h5 class='card-title'>"+video.title+"</h5><p><h6>"+video.author+"</h6></p></td><td  style='width:20%;text-align:center;'><h6 class='card-subtitle mb-2 text-muted'><input class='form-check-input' style='height:40px;width:40px' type='checkbox' value='"+video.video_id+"' data-quality='"+str1+"' id='flexCheckDefault"+str(a)+"'></h6></td></tr></table></div></div>"
             a+=1
-    print(output)
     return output
 @eel.expose    
 def displayVideoDefault(url,check):
@@ -114,6 +111,7 @@ def download(url,quality):
             stream = data.streams.filter(resolution=resolution,mime_type=mime_type,progressive=True)
             stream.order_by('resolution').desc().first().download(path)
         eel.sendAlert(data.title)
+    eel.completed()
 
 def getMyMixUrls(url):
     data=[]

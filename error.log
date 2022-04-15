@@ -1,0 +1,82 @@
+2022-04-15 10:56:30,177 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-15 10:56:30,177 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-15 10:56:30,179 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-15 10:56:30] "GET /index.html HTTP/1.1" 200 8846 0.002487
+2022-04-15 10:56:30,234 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-15 10:56:30,234 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-15 10:56:30,242 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-15 10:56:30] "GET /css/style.css HTTP/1.1" 200 6562 0.007893
+2022-04-15 10:56:30,243 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-15 10:56:30,243 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-15 10:56:30,244 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-15 10:56:30] "GET /eel.js HTTP/1.1" 200 5251 0.000000
+2022-04-15 10:56:30,340 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-15 10:56:30,340 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-15 10:56:30,345 INFO geventwebsocket.handler 127.0.0.1 - - [2022-04-15 10:56:30] "GET /favicon.ico HTTP/1.1" 404 877 0.004649
+2022-04-15 10:56:30,641 DEBUG geventwebsocket.handler Initializing WebSocket
+2022-04-15 10:56:30,642 DEBUG geventwebsocket.handler Validating WebSocket request
+2022-04-15 10:56:30,642 DEBUG geventwebsocket.handler Attempting to upgrade connection
+2022-04-15 10:56:30,642 DEBUG geventwebsocket.handler WebSocket request accepted, switching protocols
+2022-04-15 10:56:55,156 DEBUG pytube.helpers matched regex search: (?:v=|\/)([0-9A-Za-z_-]{11}).*
+2022-04-15 10:56:57,570 DEBUG pytube.extract applying descrambler
+2022-04-15 10:56:57,573 DEBUG pytube.extract finding initial function name
+2022-04-15 10:56:57,576 DEBUG pytube.extract Pattern failed: ytplayer\.config\s*=\s*
+2022-04-15 10:56:57,576 DEBUG pytube.extract Could not parse object.
+2022-04-15 10:56:57,637 DEBUG pytube.extract finished regex search, matched: (/s/player/[\w\d]+/[\w\d_/.]+/base\.js)
+2022-04-15 10:56:59,727 DEBUG pytube.cipher finding initial function name
+2022-04-15 10:57:00,079 DEBUG pytube.cipher finished regex search, matched: (?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)
+2022-04-15 10:57:00,079 DEBUG pytube.cipher getting transform plan
+2022-04-15 10:57:00,080 DEBUG pytube.helpers matched regex search: ara=function\(\w\){[a-z=\.\(\"\)]*;(.*);(?:.+)}
+2022-04-15 10:57:00,080 DEBUG pytube.cipher getting transform object
+2022-04-15 10:57:00,082 DEBUG pytube.cipher Finding throttling function name
+2022-04-15 10:57:00,084 DEBUG pytube.cipher finished regex search, matched: a\.[a-zA-Z]\s*&&\s*\([a-z]\s*=\s*a\.get\("n"\)\)\s*&&\s*\([a-z]\s*=\s*([a-zA-Z0-9$]{2,3})(\[\d+\])?\([a-z]\)
+2022-04-15 10:57:00,087 DEBUG pytube.cipher Finding throttling function name
+2022-04-15 10:57:00,088 DEBUG pytube.cipher finished regex search, matched: a\.[a-zA-Z]\s*&&\s*\([a-z]\s*=\s*a\.get\("n"\)\)\s*&&\s*\([a-z]\s*=\s*([a-zA-Z0-9$]{2,3})(\[\d+\])?\([a-z]\)
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,093 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:00,094 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:08,592 DEBUG pytube.helpers matched regex search: (?:v=|\/)([0-9A-Za-z_-]{11}).*
+2022-04-15 10:57:10,646 DEBUG pytube.extract applying descrambler
+2022-04-15 10:57:10,647 DEBUG pytube.extract finding initial function name
+2022-04-15 10:57:10,648 DEBUG pytube.extract Pattern failed: ytplayer\.config\s*=\s*
+2022-04-15 10:57:10,648 DEBUG pytube.extract Could not parse object.
+2022-04-15 10:57:10,670 DEBUG pytube.extract finished regex search, matched: (/s/player/[\w\d]+/[\w\d_/.]+/base\.js)
+2022-04-15 10:57:10,670 DEBUG pytube.cipher finding initial function name
+2022-04-15 10:57:11,017 DEBUG pytube.cipher finished regex search, matched: (?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)
+2022-04-15 10:57:11,018 DEBUG pytube.cipher getting transform plan
+2022-04-15 10:57:11,018 DEBUG pytube.helpers matched regex search: ara=function\(\w\){[a-z=\.\(\"\)]*;(.*);(?:.+)}
+2022-04-15 10:57:11,018 DEBUG pytube.cipher getting transform object
+2022-04-15 10:57:11,019 DEBUG pytube.cipher Finding throttling function name
+2022-04-15 10:57:11,020 DEBUG pytube.cipher finished regex search, matched: a\.[a-zA-Z]\s*&&\s*\([a-z]\s*=\s*a\.get\("n"\)\)\s*&&\s*\([a-z]\s*=\s*([a-zA-Z0-9$]{2,3})(\[\d+\])?\([a-z]\)
+2022-04-15 10:57:11,023 DEBUG pytube.cipher Finding throttling function name
+2022-04-15 10:57:11,024 DEBUG pytube.cipher finished regex search, matched: a\.[a-zA-Z]\s*&&\s*\([a-z]\s*=\s*a\.get\("n"\)\)\s*&&\s*\([a-z]\s*=\s*([a-zA-Z0-9$]{2,3})(\[\d+\])?\([a-z]\)
+2022-04-15 10:57:11,028 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,028 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,028 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,028 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,029 DEBUG pytube.extract signature found, skip decipher
+2022-04-15 10:57:11,030 DEBUG pytube.streams downloading (3224875 total bytes) file to C:\Users\dell\Downloads\Ho Raha Hai Jo - Armaan Malik - Taqdeer - Hindi Dubbed Movie Full Song 2018.webm
+2022-04-15 10:57:13,691 DEBUG pytube.streams download remaining: 0
+2022-04-15 10:57:13,691 DEBUG pytube.streams download finished
+2022-04-15 10:57:25,052 DEBUG geventwebsocket.handler Closed WebSocket
+2022-04-15 10:57:26,057 DEBUG geventwebsocket.handler Failed to write closing frame -> closing socket
+2022-04-15 10:57:26,059 DEBUG geventwebsocket.handler Closed WebSocket
