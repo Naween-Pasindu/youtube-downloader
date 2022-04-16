@@ -9,4 +9,4 @@ Specially designed to download youtube personalized playlists.
 -Selenium
 
 ### Download
-[windows]https://github.com/Naween-Pasindu/youtube-downloader/releases/app-v0.1.1alpha.exe
+[windows]https://github.com/Naween-Pasindu/youtube-downloader/releases/v0.1.1alpha/app-v0.1.1alpha.exe
