@@ -7,3 +7,6 @@ Specially designed to download youtube personalized playlists.
 -Pytube
 
 -Selenium
+
+### Download
+[windows]https://github.com/Naween-Pasindu/youtube-downloader/releases/app-v0.1.1alpha.exe
