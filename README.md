@@ -2,7 +2,7 @@
 
 Specially designed to download youtube personalized playlists.
 
-#Used Technologies
+## Used Technologies
 
 -Pytube
 
